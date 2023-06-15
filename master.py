@@ -10,6 +10,13 @@ import tkinter as tk
 
 lengthOfPassword = random.randint(7,14)
 
+def storeInFile(strength):
+    strength = strength
+    finalPassword = createCombinedPassword(strength)
+    print(f"Your password is {finalPassword}")
+    
+    
+    
 def createPasswordLowercase(length):
     characters = string.ascii_lowercase
     password = ""
@@ -43,6 +50,22 @@ def createCombinedPassword(length):
     random.shuffle(combined_password)
     combinedPassword = ''.join(combined_password)
     return combinedPassword
+
+def actionsButtonWeak(event):
+    #print("weak")
+    strength = 8
+    storeInFile(strength)
+    
+    
+def actionsButtonStrong(event):
+    #print("strong")
+    strength = 12
+    storeInFile(strength)
+    
+def actionsButtonSuperStrong(event):
+    #print("super strong")
+    strength = 16
+    storeInFile(strength)
     
     
 #determining how secure
@@ -65,18 +88,33 @@ if strength == "super strong":
 window = tk.Tk()
 window.title("Password Generator")
 
-weakLabel = tk.Label(window, text = "Weak")
-StrongLabel = tk.Label(window, text = "Strong")
-superStrongLabel = tk.Label(window, text = "Super Strong")
-strengthOptions = [weak, strong, superStrong]
-weakButton = tk.Button(window, text="Weak")
-strongButton = tk.Button(window, text="Strong")
-superStrongButton = tk.Button(window, text="Super Strong")
-window.grid_columnconfigure(0, weight = 1, uniform="buttons")
-window.grid_columnconfigure(1, weight = 1, uniform="buttons")
-window.grid_columnconfigure(2, weight = 1, uniform="buttons")
-weakButton.grid(row = 0, column = 0)
-strongButton.grid(row = 0, column = 1)
-superStrongButton.grid(row = 0, column = 2)
 
+# Create buttons
+weakButton = tk.Button(window, text="Weak", width=50, height=10, font=("Courier New",16), bg="#3d3dff", fg="white", highlightbackground="#3d3dff")
+strongButton = tk.Button(window, text="Strong", width=50, height=10, font=("Courier New",16), bg="#3d3dff", fg="white", highlightbackground="#3d3dff")
+superStrongButton = tk.Button(window, text="Super Strong", width=50, height=10, font=("Courier New",16), bg="#3d3dff", fg="white", highlightbackground="#3d3dff")
+
+# Grid layout for labels
+
+
+# Grid layout for buttons
+weakButton.grid(row=1, column=0, padx=50, pady=100, sticky="nsew")
+strongButton.grid(row=1, column=1, padx=50, pady=100, sticky="nsew")
+superStrongButton.grid(row=1, column=2, padx=50, pady=100, sticky="nsew")
+
+# Configure grid columns to expand and center the buttons
+window.grid_columnconfigure(0, weight=1)
+window.grid_columnconfigure(1, weight=1)
+window.grid_columnconfigure(2, weight=1)
+
+#bind the buttons
+weakButton.bind("<Button-1>", actionsButtonWeak)
+strongButton.bind("<Button-1>", actionsButtonStrong)
+superStrongButton.bind("<Button-1>", actionsButtonSuperStrong)
+
+
+# Configure grid row to expand
+window.grid_rowconfigure(1, weight=1)
+
+# Start the main event loop
 window.mainloop()
