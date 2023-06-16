@@ -4,7 +4,10 @@ import time
 from pathlib import Path
 import string
 import tkinter as tk
-
+import tkinter.messagebox as messagebox
+import tkinter.ttk as ttk
+import pyperclip
+window = tk.Tk()
 
 #Setup creating the password
 
@@ -14,8 +17,25 @@ def storeInFile(strength):
     strength = strength
     finalPassword = createCombinedPassword(strength)
     print(f"Your password is {finalPassword}")
-    
-    
+
+    if strength == 8:
+        strength = "Weak"
+    elif strength == 12:
+        strength = "Strong"
+    elif strength == 16:
+        strength = "SuperStrong"
+
+    with open("password.txt", "a+") as f:
+        f.write(f"{finalPassword} Strength: {strength}\n")
+
+    passwordLabel.config(text=f"{finalPassword}")  # Update the label text
+    return finalPassword
+
+def copyPassword():
+    password = passwordLabel.cget("text")
+    pyperclip.copy(password)
+    messagebox.showinfo("Password Copied", "The password has been copied to the clipboard.")
+        
     
 def createPasswordLowercase(length):
     characters = string.ascii_lowercase
@@ -67,7 +87,10 @@ def actionsButtonSuperStrong(event):
     strength = 16
     storeInFile(strength)
     
-    
+def createLabel(text):
+    label = tk.Label(window, text=text, font=("Courier New",16))
+    label.grid(row=0, column=0, columnspan=3, padx=50, pady=100, sticky="nsew")
+  
 #determining how secure
 
 weak = 8
@@ -85,8 +108,11 @@ if strength == "super strong":
 #combined_password = createCombinedPassword(strength)
 #print(combined_password)
 
-window = tk.Tk()
+
 window.title("Password Generator")
+
+# Create labels
+
 
 
 # Create buttons
@@ -96,11 +122,19 @@ superStrongButton = tk.Button(window, text="Super Strong", width=50, height=10, 
 
 # Grid layout for labels
 
+weakaction = actionsButtonWeak
+strongaction = actionsButtonStrong
+superStrongaction = actionsButtonSuperStrong
+
+passwordLabel = tk.Label(window, text="", font=("Courier New", 16), fg="black")
+passwordLabel.grid(row=0, column=0, columnspan=3, padx=50, pady=100, sticky="nsew")
 
 # Grid layout for buttons
 weakButton.grid(row=1, column=0, padx=50, pady=100, sticky="nsew")
 strongButton.grid(row=1, column=1, padx=50, pady=100, sticky="nsew")
 superStrongButton.grid(row=1, column=2, padx=50, pady=100, sticky="nsew")
+copyButton = ttk.Button(window, text="Copy", command=copyPassword)
+copyButton.grid(row=2, column=0, columnspan=3, padx=50, pady=10, sticky="nsew")
 
 # Configure grid columns to expand and center the buttons
 window.grid_columnconfigure(0, weight=1)
@@ -108,9 +142,10 @@ window.grid_columnconfigure(1, weight=1)
 window.grid_columnconfigure(2, weight=1)
 
 #bind the buttons
-weakButton.bind("<Button-1>", actionsButtonWeak)
-strongButton.bind("<Button-1>", actionsButtonStrong)
-superStrongButton.bind("<Button-1>", actionsButtonSuperStrong)
+weakButton.bind("<Button-1>", weakaction)
+strongButton.bind("<Button-1>", strongaction)
+superStrongButton.bind("<Button-1>", superStrongaction)
+
 
 
 # Configure grid row to expand
